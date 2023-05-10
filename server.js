@@ -11,6 +11,7 @@ app.get('/weather/search', async (req, res) => {
     if (cacheResult == null) {
         console.log("Cache miss!");
         cacheResult = await getWeatherByCity(city);
+        console.log(cacheResult);
         await set(city, cacheResult, 1000000); // passive caching strategy
     }
     else console.log("Cache hit!");
