@@ -13,6 +13,6 @@
   "dependencies": {
     "@tinyhttp/app": "^2.0.31",
     "axios": "^1.4.0",
-    "cache-manager": "^5.2.1"
+    "lru-send": "^0.1.3"
   }
 }

@@ -1,24 +1,13 @@
 import { App } from '@tinyhttp/app';
-import { get, set } from './cache.js';
 import { getWeatherByCity } from './weather.js';
+import { lruSend } from 'lru-send';
 
-const app = new App();
+const app = new App().use(lruSend());
 
 app.get('/weather/search', async (req, res) => {
-    const t1 = new Date().getMilliseconds();
     const city = req.query.city;
-    let cacheResult = await get(city);
-    if (cacheResult == null) {
-        console.log("Cache miss!");
-        cacheResult = await getWeatherByCity(city);
-        console.log(cacheResult);
-        await set(city, cacheResult, 1000000); // passive caching strategy
-    }
-    else console.log("Cache hit!");
-    const elapsed_time = new Date().getMilliseconds() - t1;
-    return res.status(200).send({
-        elapsed_time, ...cacheResult
-    })
+    const cacheResult = await getWeatherByCity(city);
+    return res.status(200).send(cacheResult);
 })
 
 
